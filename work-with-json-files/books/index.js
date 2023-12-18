@@ -31,6 +31,7 @@ const add = async (data) => {
   return newBook;
 };
 
+// Отримаємо всі книги, дальше потрібно знайти цю книгу яку потрібно оновити. Робимо перевірку якщо не знайдемо нашу книгу , перезаписуємо книгу
 const updateById = async (id, data) => {
   const books = await getAll();
   const index = books.findIndex((item) => item.id === id);
@@ -38,18 +39,19 @@ const updateById = async (id, data) => {
   if (index === -1) {
     return null;
   }
-  books[index] = { id, ...data };
-  await fs.writeFile(booksPath, JSON.stringify(books, null, 2));
-  return books[index];
+  books[index] = { id, ...data }; //  перезаписуємо книгу
+  await fs.writeFile(booksPath, JSON.stringify(books, null, 2)); //  перезаписуємо  JSON
+  return books[index]; // повертаємо перезаписану книгу
 };
 
 const deleteById = async (id) => {
-  const books = await getAll();
-  const index = books.findIndex((item) => item.id === id);
+  const books = await getAll(); // отримаємо всі книги
+  const index = books.findIndex((item) => item.id === id); // знаходимо її індекс
   if (index === -1) {
+    // Робимо перевірку чи є книга
     return null;
   }
-  const [result] = books.splice(index, 1);
+  const result = books.splice(index, 1); // видаляємо по індексу і результат запис в змінну
   await fs.writeFile(booksPath, JSON.stringify(books, null, 2));
   return result;
 };
